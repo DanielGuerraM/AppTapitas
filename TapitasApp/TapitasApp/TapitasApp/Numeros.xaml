@@ -9,8 +9,19 @@
             <Label Text="Ingresar el telefono de los jugadores" TextColor="#000000" FontSize="25" HorizontalTextAlignment="Center"/>
             <Label Text="Los numeros con los que jugara cada participante seran enviados al WhatsApp" HorizontalTextAlignment="Center"/>
 
-            <StackLayout x:Name="panelTelJugadores"/>
-            <Button Text="Enviar numeros" HorizontalOptions="Center" BackgroundColor="#F61111" TextColor="#FFFFFF" CornerRadius="10" Margin="0, 60, 0, 0" Padding="30"/>
+            <StackLayout x:Name="panelTelJugadores"
+                         Margin="0, 30, 0, 0"
+                         WidthRequest="240"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center"/>
+            <Button Text="Enviar numeros" 
+                    HorizontalOptions="Center" 
+                    BackgroundColor="#F61111" 
+                    TextColor="#FFFFFF" 
+                    CornerRadius="10" 
+                    Margin="0, 60, 0, 0" 
+                    Padding="30"
+                    Clicked="Button_Clicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

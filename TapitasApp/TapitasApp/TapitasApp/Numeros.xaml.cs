@@ -28,12 +28,18 @@ namespace TapitasApp
                 Entry entry = new Entry();
                 entry.Placeholder = "321 0000000";
                 entry.Keyboard = Keyboard.Telephone;
+                entry.HorizontalTextAlignment = TextAlignment.Center;
                 entry.MaxLength = 10;
 
                 panelTelJugadores.Children.Add(lbl);
                 panelTelJugadores.Children.Add(entry);
 
             }
+        }
+
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+
         }
     }
 }
