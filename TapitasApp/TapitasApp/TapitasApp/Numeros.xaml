@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TapitasApp.Numeros">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Center"
+                 HorizontalOptions="Center">
+
+            <Label Text="Ingresar el telefono de los jugadores" TextColor="#000000" FontSize="25" HorizontalTextAlignment="Center"/>
+            <Label Text="Los numeros con los que jugara cada participante seran enviados al WhatsApp" HorizontalTextAlignment="Center"/>
+
+            <StackLayout x:Name="panelTelJugadores"/>
+            <Button Text="Enviar numeros" HorizontalOptions="Center" BackgroundColor="#F61111" TextColor="#FFFFFF" CornerRadius="10" Margin="0, 60, 0, 0" Padding="30"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

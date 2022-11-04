@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TapitasApp.MainPage">
+
+    <StackLayout VerticalOptions="Center"
+                 HorizontalOptions="Center">
+        <Label HorizontalTextAlignment="Center" Text="Tapitas" FontSize="40" FontAttributes="Bold" TextColor="#FF1C1C" Margin="0, 0, 0, 50"/>
+        <Label Text="Numero de jugadores" FontSize="20" TextColor="#000000"/>
+        <Entry x:Name="txtNumJugadores" Placeholder="Max: 4" Keyboard="Numeric" MaxLength="1"/>
+        <Label Text="Numero de tapas" FontSize="20" TextColor="#000000" Margin="0, 20, 0, 0"/>
+        <Entry x:Name="txtNumTapas" Placeholder="Ejem: 3" Keyboard="Numeric" MaxLength="1"/>
+
+        <Button x:Name="btnRepartir" Text="Repartir tapas" BackgroundColor="#F61111" TextColor="#FFFFFF" CornerRadius="10" Margin="0, 60, 0, 0" Padding="30" Clicked="btnRepartir_Clicked"/>
+    </StackLayout>
+
+</ContentPage>
