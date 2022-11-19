@@ -28,7 +28,7 @@ namespace TapitasApp
                     DisplayAlert("Alerta", "Número de jugadores no valido", "oK");
                     return;
                 }
-                    Navigation.PushAsync(new Numeros(numJugadores));
+                    Navigation.PushAsync(new Numeros(numJugadores, numTapas));
                     txtNumJugadores.Text = "";
                     txtNumTapas.Text = "";
             }
