@@ -64,7 +64,6 @@ namespace TapitasApp
         private void Button_Clicked(object sender, EventArgs e)
         {
             numerosTapas(this.Tapas, this.Jugadores);
-            Hola mijo;
         }
     }
 }
