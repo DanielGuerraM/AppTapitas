@@ -50,12 +50,44 @@ namespace TapitasApp
         {
             int[] numeroTapa = new int[tapas * jugadores];
 
-            int n;
-            Random rdm = new Random();
+            //numeros es numeroTapa
 
-            for(var i = 0; i < numeroTapa.Length; i++)
+
+            //int n;
+
+            //for(var i = 0; i < numeroTapa.Length; i++)
+            //{
+            //    numeroTapa[i] = rdm.Next(1, 16);
+            //}
+
+            Random rdm = new Random();
+            bool repetido;
+            int numero;
+            int indice = 0;
+
+            while (indice < numeroTapa.Length)
             {
-                numeroTapa[i] = rdm.Next(1, 16);
+
+                repetido = false;
+
+                numero = rdm.Next(1, 16);
+
+                for (int i = 0; i < indice; i++)
+                {
+                    if (numeroTapa[i] == numero)
+                    {
+                        repetido = true;
+                    }
+                    //DisplayAlert("Alert", $"Los numeros son {numeroTapa[i]}", "Ok");
+                }
+
+                if (!repetido)
+                {
+                    numeroTapa[indice] = numero;
+                    indice++;
+                    DisplayAlert("Alert", $"Los numeros son {numeroTapa[indice]}", "Ok");
+                }
+                //DisplayAlert("Alert", $"Los numeros son {numeroTapa[i]}", "Ok");
             }
 
             return numeroTapa;
