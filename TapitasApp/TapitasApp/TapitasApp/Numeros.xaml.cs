@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -17,9 +16,9 @@ namespace TapitasApp
 
         public Numeros(int numJugadores, int numTapas)
         {
-            InitializeComponent();
             Jugadores = numJugadores;
             Tapas = numTapas;
+            InitializeComponent();
             generaCampos();
         }
 
@@ -30,41 +29,42 @@ namespace TapitasApp
 
         public void generaCampos()
         {
-
+            campoTexto = new Entry[Jugadores];
             for (var i = 0; i < Jugadores; i++)
             {
                 campoTexto[i] = new Entry();
                 campoTexto[i].Placeholder = $"Jugador {i}";
+                campoTexto[i].MaxLength = 10;
+                campoTexto[i].Keyboard = Keyboard.Telephone;
 
+                Label label = new Label();
+                label.Text = "Jugador " + (i+1);
+                label.TextColor = Color.Black;
+
+                panelTelJugadores.Children.Add(label);
                 panelTelJugadores.Children.Add(campoTexto[i]);
             }
         }
 
-        public void loquesea(Entry[] campo)
+        public void LeerNumeros(Entry[] campo)
         {
+            long[] telefonosJugadores = new long[Jugadores];
+
             for(var i = 0; i < campo.Length; i++)
             {
-            DisplayAlert("Alerta", $"{campo[i].Text}", "OK");
+                telefonosJugadores[i] = Convert.ToInt64(campoTexto[i].Text);
+
+                DisplayAlert("Alerta", $"{telefonosJugadores[i]}","Ok");
             }
         }
 
-
-        //public void AgregarLabel(StackLayout sl, string name)
+        //public void estanVaciosCamposTelefonos()
         //{
-        //    Label label = new Label() { Text = name };
-        //    label.TextColor = Color.Black;
-        //    label.FontAttributes = FontAttributes.Bold;
-
-        //    sl.Children.Add(label);
-        //}
-
-        //public void LeerTexto()
-        //{
-        //    foreach(View v in panelTelJugadores.Children)
+        //    for(var i = 0; i < campoTexto.Length; i++)
         //    {
-        //        if(v.StyleId != null)
+        //        if(campoTexto[i].ToString() == "")
         //        {
-        //            DisplayAlert("Alerta","No puedes estar vacios","Ok");
+        //            DisplayAlert("Alerta","Los campos de telefonos son obligatorios","Ok");
         //        }
         //    }
         //}
@@ -102,7 +102,7 @@ namespace TapitasApp
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            loquesea(campoTexto);
+            LeerNumeros(campoTexto);
         }
     }
 }
