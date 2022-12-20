@@ -7,6 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
+
 
 namespace TapitasApp
 {
@@ -44,7 +48,7 @@ namespace TapitasApp
                 panelTelJugadores.Children.Add(label);
                 panelTelJugadores.Children.Add(campoTexto[i]);
             }
-        }
+        } 
 
         public void LeerNumeros(Entry[] campo)
         {
@@ -53,56 +57,87 @@ namespace TapitasApp
             for(var i = 0; i < campo.Length; i++)
             {
                 telefonosJugadores[i] = Convert.ToInt64(campoTexto[i].Text);
+            }
+            estaVacio(campo, telefonosJugadores);
+        }
 
-                DisplayAlert("Alerta", $"{telefonosJugadores[i]}","Ok");
+        public void estaVacio(Entry[] camposTelefonos, long[] telefonosJugadores)
+        {
+            for(var i = 0; i < camposTelefonos.Length; i++)
+            {
+                if (Convert.ToInt64(camposTelefonos[i].Text) == 0)
+                {
+                    DisplayAlert("Alerta","Los campos no deben ir vacios","Ok");
+                    return;
+                }
+            }
+            sonRepetidos(telefonosJugadores);
+        }
+
+        public void sonRepetidos(long[] telefonos)
+        {
+            for (var i = 0; i < telefonos.Length; i++)
+            {
+                for (var j = 0; j < telefonos.Length; j++)
+                {
+                    if (telefonos[i] == telefonos[j] && i != j)
+                    {
+                        DisplayAlert("Alerta", "Los numeros no se deben de repetir", "Ok");
+                        return;
+                    }
+                }                 
+            }
+            GenerarNumeros();
+        }
+
+        public void GenerarNumeros()
+        {
+            int[] numerosTapas = new int[(Tapas * Jugadores)];
+
+            Random rdn = new Random();
+
+            for(var i = 0; i < numerosTapas.Length; i++)
+            {
+                numerosTapas[i] = rdn.Next(1, 16);
+            }
+            enviarMensaje(numerosTapas);
+        }
+
+        public void enviarMensaje(int[] numerosTapas)
+        {
+            try 
+            {
+                var accountSid = "AC365fe6358f7166e9f528408d6bc3f702";
+                var authToken = "14a11f663f5c83eac714e47be6754b01";
+                TwilioClient.Init(accountSid, authToken);
+
+                var messageOptions = new CreateMessageOptions(
+                    new PhoneNumber("whatsapp:+573213070026"));
+                messageOptions.From = new PhoneNumber("whatsapp:+14155238886");
+                string[] mensaje = new string[numerosTapas.Length];
+
+                for (var i = 0; i < numerosTapas.Length; i++)
+                {
+                    mensaje[i] = numerosTapas[i].ToString();
+                    int posCero =  (mensaje.Length - 1) - (mensaje.Length - 1);
+                    messageOptions.Body = $"Los numeros con los que jugaras son: *{mensaje[posCero]} {mensaje[posCero + 1]}*";
+                }
+
+                var message = MessageResource.Create(messageOptions);
+                Console.WriteLine(message.Body);
+
+                DisplayAlert("Exito", "Los numeros fueron enviados correctamente", "Continuar");
+                return;
+            }
+            catch
+            {
+                DisplayAlert("Error","No se pudo completar la accion","Volver a intentar");
             }
         }
 
-        //public void estanVaciosCamposTelefonos()
-        //{
-        //    for(var i = 0; i < campoTexto.Length; i++)
-        //    {
-        //        if(campoTexto[i].ToString() == "")
-        //        {
-        //            DisplayAlert("Alerta","Los campos de telefonos son obligatorios","Ok");
-        //        }
-        //    }
-        //}
-
-        //public int[] numerosTapas(int tapas, int jugadores)
-        //{
-        //    int[] numeroTapa = new int[tapas * jugadores];
-
-        //    Random rdm = new Random();
-        //    bool repetido;
-        //    int numero;
-        //    int indice = 0;
-
-        //    while (indice < numeroTapa.Length)
-        //    {
-        //        repetido = false;
-        //        numero = rdm.Next(1, 16);
-
-        //        for (int i = 0; i < indice; i++)
-        //        {
-        //            if (numeroTapa[i] == numero)
-        //            {
-        //                repetido = true;
-        //            }
-        //        }
-
-        //        if (!repetido)
-        //        {
-        //            numeroTapa[indice] = numero;
-        //            indice++;
-        //        }
-        //    }
-        //    return numeroTapa;
-        //}
-
         private void Button_Clicked(object sender, EventArgs e)
         {
-            LeerNumeros(campoTexto);
+            LeerNumeros(campoTexto);     
         }
     }
 }

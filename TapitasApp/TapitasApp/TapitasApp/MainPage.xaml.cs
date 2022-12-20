@@ -28,7 +28,7 @@ namespace TapitasApp
                     DisplayAlert("Alerta", "Número de jugadores no valido", "oK");
                     return;
                 }
-                else if(numJugadores == 4 && numTapas > 4){
+                else if(numJugadores == 4 && numTapas >= 4){
                     DisplayAlert("Alerta", "Número de tapas no valido", "oK");
                     return;
                 }
