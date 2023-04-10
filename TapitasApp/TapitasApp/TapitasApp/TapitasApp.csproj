@@ -25,4 +25,10 @@
   <ItemGroup>
     <Folder Include="NewFolder\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OpenTK-1.0">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\Xamarin.iOS\v1.0\OpenTK-1.0.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
