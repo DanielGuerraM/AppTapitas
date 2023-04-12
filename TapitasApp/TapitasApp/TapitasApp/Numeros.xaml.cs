@@ -55,10 +55,10 @@ namespace TapitasApp
         {
             long[] telefonosJugadores = new long[Jugadores];
 
-            /*for(var i = 0; i < camposTelefonos.Length; i++)
+            for (var i = 0; i < camposTelefonos.Length; i++)
             {
                 telefonosJugadores[i] = Convert.ToInt64(campoTexto[i].Text);
-            }*/
+            }
 
             for (var i = 0; i < camposTelefonos.Length; i++)
             {
@@ -76,7 +76,15 @@ namespace TapitasApp
                 }
             }
 
-            for (var i = 0; i < telefonosJugadores.Length; i++)
+            bool noDuplicates = telefonosJugadores.Length == telefonosJugadores.Distinct().Count();
+
+            if (!noDuplicates)
+            {
+                DisplayAlert("Alerta", "Los telefonos no pueden ser menores a 10 dígitos ni tener puntos", "Ok");
+                return;
+            }
+
+            /*for (var i = 0; i < telefonosJugadores.Length; i++)
             {
                 for (var j = 0; j < telefonosJugadores.Length; j++)
                 {
@@ -86,7 +94,7 @@ namespace TapitasApp
                         return;
                     }
                 }
-            }
+            }*/
 
             GenerarNumeros();
         }
@@ -126,7 +134,7 @@ namespace TapitasApp
 
                 //--------------------------------------------------
 
-                for (var j = 0; j < Jugadores; j++) {
+                //for (var j = 0; j < Jugadores; j++) {
 
                     var messageOptions = new CreateMessageOptions(
                     new PhoneNumber($"whatsapp:+573213070026"));
@@ -159,7 +167,7 @@ namespace TapitasApp
                     Console.WriteLine(message.Body);
 
                     DisplayAlert("Exito", "Los numeros fueron enviados correctamente", "Continuar");
-                }
+                //}
 
                 
              //---------------------------------------------------------------------------------------------------------------------
