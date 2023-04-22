@@ -24,104 +24,103 @@ namespace TapitasApp
             Tapas = numTapas;
             InitializeComponent();
             generaCampos();
+            
         }
 
         public static int Jugadores { get; set; }
-        public int Tapas { get; set; }
+        public static int Tapas { get; set; }
 
-        Entry[] campoTexto = new Entry[Jugadores];
+        Entry[] numerosTelefonosJugadores = new Entry[Jugadores];
+        int[] numerosTapasJugador = new int[Jugadores * Tapas];
+        List<long> numerosJugadores = new List<long>();
+        bool estaCorrecto;
 
         public void generaCampos()
         {
-            campoTexto = new Entry[Jugadores];
+            numerosTelefonosJugadores = new Entry[Jugadores];
             for (var i = 0; i < Jugadores; i++)
             {
-                campoTexto[i] = new Entry();
-                campoTexto[i].Placeholder = $"Jugador {i}";
-                campoTexto[i].MaxLength = 10;
-                campoTexto[i].Keyboard = Keyboard.Numeric;
+                numerosTelefonosJugadores[i] = new Entry();
+                numerosTelefonosJugadores[i].Placeholder = $"Jugador {i}";
+                numerosTelefonosJugadores[i].MaxLength = 10;
+                numerosTelefonosJugadores[i].Keyboard = Keyboard.Numeric;
 
                 Label label = new Label();
                 label.Text = "Jugador " + (i+1);
                 label.TextColor = Color.Black;
 
                 panelTelJugadores.Children.Add(label);
-                panelTelJugadores.Children.Add(campoTexto[i]);
-
+                panelTelJugadores.Children.Add(numerosTelefonosJugadores[i]);
             }
         }
 
-        public void LeerNumeros(Entry[] camposTelefonos)
+        public bool sonCorrectos(Entry[] camposTelJuegadores)
         {
-            long[] telefonosJugadores = new long[Jugadores];
+            bool existe = false;
 
-            for (var i = 0; i < camposTelefonos.Length; i++)
+            for(var i = 0; i < camposTelJuegadores.Length; i++) 
             {
-                telefonosJugadores[i] = Convert.ToInt64(campoTexto[i].Text);
+                if(string.IsNullOrEmpty(camposTelJuegadores[i].Text))
+                {
+                    DisplayAlert("Alerta!", "Los campos no pueden ir vacios", "Continuar");
+                    return estaCorrecto = false;
+                }
+
+                if (camposTelJuegadores[i].Text.Contains(".") || camposTelJuegadores[i].Text.Contains("-"))
+                {
+                    DisplayAlert("Alerta!", "Formato telefonico no valido", "Continuar");
+                    return estaCorrecto = false;
+                }
+
+                if(camposTelJuegadores[i].Text.Length < 10)
+                {
+                    DisplayAlert("Alerta!", "Numeros telefonicos no validos", "Continuar");
+                    return estaCorrecto = false;
+                }
+
+                if (numerosJugadores.Contains(Convert.ToInt64(camposTelJuegadores[i].Text)))
+                {
+                    existe = true;
+                }
+
+                if (existe)
+                {
+                    DisplayAlert("Alerta!", "Los numeros telefonicos no se pueden repetir", "Continuar");
+                    numerosJugadores.Clear();
+                    return estaCorrecto = false;
+                }
+
+                numerosJugadores.Add(Convert.ToInt64(camposTelJuegadores[i].Text));
             }
 
-            for (var i = 0; i < camposTelefonos.Length; i++)
-            {
-                string telefonoSinPunto = camposTelefonos[i].Text.Replace(".", "");
+            estaCorrecto = true;
 
-                if (Convert.ToInt64(telefonoSinPunto.Length) == 0)
-                {
-                    DisplayAlert("Alerta", "Los campos no deben ir vacios", "Ok");
-                    return;
-                }
-                if (Convert.ToInt64(telefonoSinPunto.Length) < 10)
-                {
-                    DisplayAlert("Alerta", "Los telefonos no pueden ser menores a 10 dígitos ni tener puntos", "Ok");
-                    return;
-                }
-            }
-
-            bool noDuplicates = telefonosJugadores.Length == telefonosJugadores.Distinct().Count();
-
-            if (!noDuplicates)
-            {
-                DisplayAlert("Alerta", "Los telefonos no pueden ser menores a 10 dígitos ni tener puntos", "Ok");
-                return;
-            }
-
-            /*for (var i = 0; i < telefonosJugadores.Length; i++)
-            {
-                for (var j = 0; j < telefonosJugadores.Length; j++)
-                {
-                    if (telefonosJugadores[i] == telefonosJugadores[j] && i != j)
-                    {
-                        DisplayAlert("Alerta", "Los numeros no se deben de repetir", "Ok");
-                        return;
-                    }
-                }
-            }*/
-
-            GenerarNumeros();
+            return estaCorrecto;
         }
 
-        public void GenerarNumeros()
+        public int[] generarNumeros()
         {
-            
             Random rdn = new Random();
-            int[] numerosTapas = new int[(Tapas * Jugadores)];
+            numerosTapasJugador = new int[Jugadores * Tapas];
             HashSet<int> set = new HashSet<int>();
 
-            for (int i = 0; i < numerosTapas.Length; i++)
+            for (int i = 0; i < numerosTapasJugador.Length; i++)
             {
                 int num;
                 do
                 {
                     // Generar un número aleatorio
                     num = rdn.Next(1, 16);
-                } while (set.Contains(num)); // Verificar si el número ya está en el conjunto
+                }
+                // Verificar si el número ya está en el conjunto
+                while (set.Contains(num));
 
                 // Agregar el número al arreglo y al conjunto
-                numerosTapas[i] = num;
+                numerosTapasJugador[i] = num;
                 set.Add(num);
             }
 
-            enviarMensaje(numerosTapas);
-
+            return numerosTapasJugador;
         }
 
         public void enviarMensaje(int[] numerosTapas)
@@ -129,48 +128,43 @@ namespace TapitasApp
             try 
             {
                 var accountSid = "AC365fe6358f7166e9f528408d6bc3f702";
-                var authToken = "28f528e32a9a24f8ad0f887fa8e74a24";
+                var authToken = "ac8cef3cd17fc48cdf25a114d689fab2";
                 TwilioClient.Init(accountSid, authToken);
 
-                //--------------------------------------------------
+              
 
-                //for (var j = 0; j < Jugadores; j++) {
+                var messageOptions = new CreateMessageOptions(
+                new PhoneNumber("whatsapp:+573213070026"));
+                messageOptions.From = new PhoneNumber("whatsapp:+14155238886");
+                string[] mensaje = new string[numerosTapas.Length];
 
-                    var messageOptions = new CreateMessageOptions(
-                    new PhoneNumber($"whatsapp:+573213070026"));
-                    messageOptions.From = new PhoneNumber("whatsapp:+14155238886");
-                    string[] mensaje = new string[numerosTapas.Length];
-
-                    for (var i = 0; i < numerosTapas.Length; i++)
+                for (var i = 0; i < numerosTapas.Length; i++)
+                {
+                    mensaje[i] = numerosTapas[i].ToString();
+                    int posCero = (mensaje.Length - 1) - (mensaje.Length - 1);
+                    if (Tapas == 1)
                     {
-                        mensaje[i] = numerosTapas[i].ToString();
-                        int posCero = (mensaje.Length - 1) - (mensaje.Length - 1);
-                        if (Tapas == 1)
-                        {
-                            messageOptions.Body = $"Los numeros con los que jugaras son: \n*{mensaje[posCero]}*";
-                        }
-                        else if (Tapas == 2)
-                        {
-                            messageOptions.Body = $"Los numeros con los que jugaras son: \n*{mensaje[posCero]} - {mensaje[posCero + 1]}*";
-                        }
-                        else if (Tapas == 3)
-                        {
-                            messageOptions.Body = $"Los numeros con los que jugaras son: \n*{mensaje[posCero]} - {mensaje[posCero + 1]} - {mensaje[posCero + 2]}*";
-                        }
-                        else if (Tapas == 4)
-                        {
-                            messageOptions.Body = $"Los numeros con los que jugaras son: \n*{mensaje[posCero]} - {mensaje[posCero + 1]} - {mensaje[posCero + 2]} - {mensaje[posCero + 3]}*";
-                        }
+                        messageOptions.Body = $"Los numeros con los que jugaras son: \n*{mensaje[posCero]}*";
                     }
+                    else if (Tapas == 2)
+                    {
+                        messageOptions.Body = $"Los numeros con los que jugaras son: \n*{mensaje[posCero]} - {mensaje[posCero + 1]}*";
+                    }
+                    else if (Tapas == 3)
+                    {
+                        messageOptions.Body = $"Los numeros con los que jugaras son: \n*{mensaje[posCero]} - {mensaje[posCero + 1]} - {mensaje[posCero + 2]}*";
+                    }
+                    else if (Tapas == 4)
+                    {
+                        messageOptions.Body = $"Los numeros con los que jugaras son: \n*{mensaje[posCero]} - {mensaje[posCero + 1]} - {mensaje[posCero + 2]} - {mensaje[posCero + 3]}*";
+                    }
+                }
 
-                    var message = MessageResource.Create(messageOptions);
-                    Console.WriteLine(message.Body);
+                var message = MessageResource.Create(messageOptions);
+                Console.WriteLine(message.Body);
 
-                    DisplayAlert("Exito", "Los numeros fueron enviados correctamente", "Continuar");
-                //}
+                DisplayAlert("Exito", "Los numeros fueron enviados correctamente", "Continuar");
 
-                
-             //---------------------------------------------------------------------------------------------------------------------
                 return;
             }
             catch (Exception e)
@@ -181,7 +175,14 @@ namespace TapitasApp
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            LeerNumeros(campoTexto);     
+            sonCorrectos(numerosTelefonosJugadores);
+
+            if (!estaCorrecto)
+            {
+                return;
+            }
+            generarNumeros();
+            enviarMensaje(numerosTapasJugador);
         }
     }
 }
